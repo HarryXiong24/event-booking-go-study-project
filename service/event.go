@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
 
 	"api.com/models"
@@ -8,7 +9,12 @@ import (
 )
 
 func GetEvents(c *gin.Context) {
-	events := models.GetAllEvents()
+	events, err := models.GetAllEvents()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch events"})
+		return
+	}
+
 	c.JSON(http.StatusOK, events)
 
 }
@@ -21,9 +27,15 @@ func CreateEvent(c *gin.Context) {
 		return
 	}
 
-	event.ID = len(models.GetAllEvents()) + 1
+	event.ID = 1
 	event.UserID = 1
 
-	event.Save()
+	err = event.Save()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not save event"})
+		fmt.Println(err)
+		return
+	}
+
 	c.JSON(http.StatusCreated, gin.H{"status": "event created", "event": event})
 }
