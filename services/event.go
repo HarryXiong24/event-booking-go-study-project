@@ -1,12 +1,29 @@
-package service
+package services
 
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"api.com/models"
 	"github.com/gin-gonic/gin"
 )
+
+func GetEvent(c *gin.Context) {
+	eventId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch events"})
+		return
+	}
+
+	event, err := models.GetEventById(eventId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch event"})
+		return
+	}
+
+	c.JSON(http.StatusOK, event)
+}
 
 func GetEvents(c *gin.Context) {
 	events, err := models.GetAllEvents()
