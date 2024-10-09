@@ -14,6 +14,7 @@ func SignUp(c *gin.Context) {
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error: cannot parse data": err.Error()})
+		fmt.Println(err)
 		return
 	}
 
@@ -24,5 +25,23 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"status": "user created", "user": user})
+	c.JSON(http.StatusCreated, gin.H{"status": "user created"})
+}
+
+func Login(c *gin.Context) {
+	var user models.User
+
+	err := c.ShouldBindJSON(&user) // Bind the request body to the user struct
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error: cannot parse data": err.Error()})
+		return
+	}
+
+	err = user.ValidateCredentials()
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "logged in", "user": user})
 }

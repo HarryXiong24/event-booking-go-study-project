@@ -1,6 +1,9 @@
 package models
 
 import (
+	"errors"
+	"fmt"
+
 	"api.com/db"
 	"api.com/utils"
 )
@@ -39,5 +42,27 @@ func (u *User) Save() error {
 	}
 
 	u.ID = userId
+	return nil
+}
+
+func (u *User) ValidateCredentials() error {
+	query := `select password from users where email = ?`
+
+	var retrievedPassword string
+	row := db.DB.QueryRow(query, u.Email)
+
+	err := row.Scan(&retrievedPassword)
+	if err != nil {
+		fmt.Println(err)
+		return errors.New("invalid password")
+	}
+
+	passwordIsValid := utils.CheckPasswordHash(u.Password, retrievedPassword)
+
+	if !passwordIsValid {
+		fmt.Println(err)
+		return errors.New("invalid password")
+	}
+
 	return nil
 }
