@@ -1,6 +1,9 @@
 package models
 
-import "api.com/db"
+import (
+	"api.com/db"
+	"api.com/utils"
+)
 
 type User struct {
 	ID       int64
@@ -20,7 +23,12 @@ func (u *User) Save() error {
 	}
 	defer stmt.Close()
 
-	res, err := stmt.Exec(u.Email, u.Password)
+	hashedPassword, err := utils.HashPassword(u.Password)
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.Exec(u.Email, hashedPassword)
 	if err != nil {
 		return err
 	}
