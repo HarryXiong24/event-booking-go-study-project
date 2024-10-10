@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"api.com/models"
-	"api.com/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,27 +37,15 @@ func GetEvents(c *gin.Context) {
 }
 
 func CreateEvent(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
-
-	if token == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "no authorization"})
-		return
-	}
-
-	err := utils.VerifyToken(token)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
-		return
-	}
-
 	var event models.Event
-	err = c.ShouldBindJSON(&event)
+	err := c.ShouldBindJSON(&event)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error: cannot parse data": err.Error()})
 		return
 	}
 
-	event.UserID = 1
+	userId := c.GetInt64("userId")
+	event.UserID = userId
 
 	err = event.Save()
 	if err != nil {
@@ -77,9 +64,16 @@ func UpdateEvent(c *gin.Context) {
 		return
 	}
 
-	_, err = models.GetEventById(eventId)
+	userId := c.GetInt("userId")
+	event, err := models.GetEventById(eventId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch event"})
+		return
+	}
+
+	// Check if the user is the owner of the event
+	if event.UserID != int64(userId) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorize to update event"})
 		return
 	}
 
@@ -110,9 +104,15 @@ func DeleteEvent(c *gin.Context) {
 		return
 	}
 
+	userId := c.GetInt("userId")
 	event, err := models.GetEventById(eventId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch event"})
+		return
+	}
+
+	if event.UserID != int64(userId) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorize to delete event"})
 		return
 	}
 
