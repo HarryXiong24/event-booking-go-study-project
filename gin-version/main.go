@@ -2,7 +2,7 @@ package main
 
 import (
 	"api.com/db"
-	"api.com/routes"
+	"api.com/routers"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +12,7 @@ func main() {
 
 	server := gin.Default()
 
-	routes.RegisterRoutes(server)
+	routers.RegisterRoutes(server)
 
 	server.Run(":8080")
 }
