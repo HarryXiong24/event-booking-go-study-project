@@ -7,7 +7,7 @@
 ## Tech Stack
 
 1.  Go
-2.  Gin
+2.  Gin / Echo
 3.  go-sqlite3
 4.  database/sql
 5.  bcrypt
