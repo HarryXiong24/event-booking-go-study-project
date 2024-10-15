@@ -11,8 +11,7 @@ func RegisterRoutes(e *echo.Echo) {
 	e.GET("/events", services.GetEvents)
 	e.GET("/events/:id", services.GetEvent)
 
-	authenticated := e.Group("/")
-	// authenticated.Use(middlewares.Authenticate)
+	authenticated := e.Group("")
 	authenticated.POST("/events", services.CreateEvent)
 	authenticated.PUT("/events/:id", services.UpdateEvent)
 	authenticated.DELETE("/events/:id", services.DeleteEvent)

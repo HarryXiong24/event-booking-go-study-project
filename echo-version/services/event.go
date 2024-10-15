@@ -42,8 +42,8 @@ func CreateEvent(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error: cannot parse data": err.Error()})
 	}
 
-	userId := c.Get("userId").(int64)
-	event.UserID = userId
+	// userId := c.Get("userId").(int64)
+	// event.UserID = userId
 
 	err = event.Save()
 	if err != nil {
