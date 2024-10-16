@@ -18,8 +18,8 @@ func RegisterRoutes(e *echo.Echo) {
 	authenticated.PUT("/events/:id", services.UpdateEvent)
 	authenticated.DELETE("/events/:id", services.DeleteEvent)
 
-	// authenticated.POST("/events/:id/register", services.RegisterForEvent)
-	// authenticated.DELETE("/events/:id/register", services.CancelRegistration)
+	authenticated.POST("/events/:id/register", services.RegisterForEvent)
+	authenticated.DELETE("/events/:id/register", services.CancelRegistration)
 
 	e.POST("/sign-up", services.SignUp)
 	e.POST("/login", services.Login)
