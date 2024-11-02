@@ -16,13 +16,14 @@ func connect() (*gorm.DB, error) {
 
 func main() {
 
-	db, error := connect()
-	if error != nil {
+	db, err := connect()
+	if err != nil {
 		panic("failed to connect database")
 	}
 
 	// CrateStudentTable(db)
 	// InsertStudent(db)
 
-	SingleQuery(db)
+	// SingleQuery(db)
+	MultipleQuery(db)
 }
