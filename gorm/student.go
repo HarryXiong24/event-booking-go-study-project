@@ -14,7 +14,7 @@ type Student struct {
 	Email     *string // Pointer to allow null values
 }
 
-func CrateStudentTable(db *gorm.DB) {
+func CreateStudentTable(db *gorm.DB) {
 	// Create the table
 	err := db.AutoMigrate(&Student{})
 	if err != nil {

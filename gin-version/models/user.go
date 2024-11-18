@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -24,7 +25,12 @@ func (u *User) Save() error {
 	if err != nil {
 		return err
 	}
-	defer stmt.Close()
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(stmt)
 
 	hashedPassword, err := utils.HashPassword(u.Password)
 	if err != nil {

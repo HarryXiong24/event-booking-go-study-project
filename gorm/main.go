@@ -21,9 +21,16 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	// CrateStudentTable(db)
+	// CreateStudentTable(db)
 	// InsertStudent(db)
 
 	// SingleQuery(db)
-	MultipleQuery(db)
+	// MultipleQuery(db)
+
+	// CreateStudentTable2(db)
+	// InsertStudent2(db)
+
+	// Query(db)
+	// Query2(db)
+	Query3(db)
 }
